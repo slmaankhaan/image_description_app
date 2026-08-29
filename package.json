@@ -2,11 +2,20 @@
   "name": "image-description-app",
   "private": true,
   "workspaces": [
-    "server"
+    "server",
+    "web"
   ],
   "scripts": {
-    "dev": "npm run dev -w server",
+    "dev": "concurrently -n server,web -c blue,green \"npm run dev -w server\" \"npm run dev -w web\"",
     "test": "npm run test -w server",
-    "typecheck": "npm run typecheck -w server"
+    "typecheck": "npm run typecheck -w server && npm run typecheck -w web"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.4"
+  },
+  "overrides": {
+    "@vitejs/plugin-react": {
+      "vite": "^6.4.3"
+    }
   }
 }

@@ -28,6 +28,9 @@ else stays uncommented; the naming should carry it.
 - Never write a real API key into any file. `.env` is gitignored from commit one
 - Do NOT build: auth, Docker, pagination, rate limiting, retries/backoff,
   cloud storage, migration tooling, a logger wrapper, React component tests
+- Never create, modify, or delete `.env` — it holds a real API key and is the
+  user's file to manage, not code to generate or touch
+
 ## Structure
 ```
 server/src/

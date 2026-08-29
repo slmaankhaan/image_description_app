@@ -1,5 +1,4 @@
 import type { Database } from 'better-sqlite3';
-import { randomUUID } from 'node:crypto';
 
 export type ImageStatus = 'pending' | 'ready' | 'failed';
 
@@ -16,6 +15,7 @@ export interface ImageRecord {
 }
 
 export interface NewImage {
+  id: string;
   filename: string;
   storagePath: string;
   mimeType: string;
@@ -51,15 +51,17 @@ function toRecord(row: ImageRow): ImageRecord {
 export class ImageRepository {
   constructor(private readonly db: Database) {}
 
+  // Takes the id from the caller rather than generating one here: the route
+  // needs it up front to name the file on disk before this insert happens,
+  // and the row must use that same id or storagePath and id would diverge.
   insertPending(image: NewImage): ImageRecord {
-    const id = randomUUID();
     this.db
       .prepare(
         `INSERT INTO images (id, filename, storage_path, mime_type, size_bytes, status)
          VALUES (?, ?, ?, ?, ?, 'pending')`
       )
-      .run(id, image.filename, image.storagePath, image.mimeType, image.sizeBytes);
-    return this.getById(id)!;
+      .run(image.id, image.filename, image.storagePath, image.mimeType, image.sizeBytes);
+    return this.getById(image.id)!;
   }
 
   markReady(id: string, description: string): void {

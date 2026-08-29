@@ -127,6 +127,7 @@ export function registerImageRoutes(app: FastifyInstance, deps: ImageRoutesDeps)
 
     const { size } = await stat(storagePath);
     const image = imageRepository.insertPending({
+      id,
       filename: file.filename,
       storagePath,
       mimeType,

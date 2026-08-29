@@ -1,4 +1,5 @@
 import type Database from 'better-sqlite3';
+import { randomUUID } from 'node:crypto';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { openDb } from '../src/db/index';
 import { ImageRepository } from '../src/db/images';
@@ -14,6 +15,7 @@ describe('ImageRepository', () => {
 
   it('round-trips an image from pending to ready', () => {
     const created = repo.insertPending({
+      id: randomUUID(),
       filename: 'cat.png',
       storagePath: 'data/uploads/cat.png',
       mimeType: 'image/png',
@@ -32,6 +34,7 @@ describe('ImageRepository', () => {
 
   it('markFailed sets status and error_message', () => {
     const created = repo.insertPending({
+      id: randomUUID(),
       filename: 'dog.jpg',
       storagePath: 'data/uploads/dog.jpg',
       mimeType: 'image/jpeg',
