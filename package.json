@@ -1,0 +1,12 @@
+{
+  "name": "image-description-app",
+  "private": true,
+  "workspaces": [
+    "server"
+  ],
+  "scripts": {
+    "dev": "npm run dev -w server",
+    "test": "npm run test -w server",
+    "typecheck": "npm run typecheck -w server"
+  }
+}

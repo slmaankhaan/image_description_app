@@ -11,6 +11,14 @@ for that path being frictionless and the code being obvious on first read.
 - Vite + React 19 + TypeScript strict. No UI library, no Tailwind — one CSS file
 - @anthropic-ai/sdk, model `claude-haiku-4-5-20251001`
 - Vitest. tsx as the dev runner — no server build step in dev
+
+## Comments
+Explain WHY, never WHAT. No comment should restate what the code already says.
+Write one where a reader would reasonably ask "why is it done this way?" —
+non-obvious constraints, deliberate omissions, decisions with a tradeoff behind
+them. A short JSDoc block on each exported module's purpose is fine. Everything
+else stays uncommented; the naming should carry it.
+
 ## Hard rules
 - Ask before adding ANY dependency not listed above
 - No SQL outside `server/src/db/images.ts`
