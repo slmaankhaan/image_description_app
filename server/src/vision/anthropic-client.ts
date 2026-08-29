@@ -5,7 +5,8 @@ const MODEL = 'claude-haiku-4-5-20251001';
 const MAX_TOKENS = 300;
 const PROMPT =
   'Describe this image in 2-3 sentences. Cover the main subject, the ' +
-  'setting, and any notable details. Write plain prose with no preamble.';
+  'setting, and any notable details. Respond with plain prose only — no ' +
+  'markdown, no headings, no bullet points, no preamble.';
 
 const SUPPORTED_MIME_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'] as const;
 

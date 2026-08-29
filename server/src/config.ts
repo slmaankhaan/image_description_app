@@ -9,8 +9,10 @@ export type Config = BaseConfig &
   ({ useFakeVision: true } | { useFakeVision: false; anthropicApiKey: string });
 
 const DEFAULT_PORT = 3000;
-const DEFAULT_DATABASE_PATH = 'data/app.db';
-const DEFAULT_UPLOAD_DIR = 'data/uploads';
+// Relative to server/ (this process's cwd when run via npm workspace
+// scripts), so ../ lands these at the repo root, matching .env.example.
+const DEFAULT_DATABASE_PATH = '../data/app.db';
+const DEFAULT_UPLOAD_DIR = '../data/uploads';
 const DEFAULT_MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024;
 
 export function loadConfig(env: NodeJS.ProcessEnv = process.env): Config {
