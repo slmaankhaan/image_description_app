@@ -98,7 +98,8 @@ export interface VisionClient {
 }
 ```
 Prompt: "Describe this image in 2-3 sentences. Cover the main subject, the
-setting, and any notable details. Write plain prose with no preamble."
+setting, and any notable details. Respond with plain prose only — no markdown,
+no headings, no bullet points, no preamble."
 `max_tokens: 300`. Wrap SDK failures in `VisionServiceError`.
 `createFakeVisionClient({ description?, shouldFail?, delayMs? })` for tests.
 
@@ -106,51 +107,13 @@ setting, and any notable details. Write plain prose with no preamble."
 skip the API key check entirely. Otherwise require `ANTHROPIC_API_KEY` and return
 the real client. Tests construct the fake directly, not via the env var.
 
-## Tests — exactly these five
-1. repository round-trip, pending → ready
-2. `markFailed` sets status and error_message
-3. POST no file → 400
-4. POST text/plain → 415
-5. POST valid PNG with fake client → 201 pending; after async settles, GET → ready
-   Use `buildApp()` + `app.inject()`. No HTTP server, no real API calls in tests.
+## Tests
+Repository round-trip and `markFailed`, plus route coverage for no file → 400,
+text/plain → 415, and valid PNG with fake client → 201 pending → ready.
+Use `buildApp()` + `app.inject()`. No HTTP server, no real API calls in tests.
 
 ## Frontend
 Single page: file input + button, upload error state, list of cards with
 thumbnail, filename, and either the description, "Generating description…",
 or the failure message. Disable button during upload. Surface server
 `error.message`. Plain and uncluttered — not a design exercise, but not broken.
-
-## Also produce
-- `.gitignore` (ignore `.env`, `data/`, `node_modules/`, `dist/`) and
-  `.env.example` — FIRST, before any code
-- `.env.example` lists `ANTHROPIC_API_KEY`, `PORT`, `DATABASE_PATH`,
-  `UPLOAD_DIR`, `MAX_FILE_SIZE_BYTES`, and a commented-out `USE_FAKE_VISION=true`
-  with a one-line note that it runs the app without a key
-- Root `package.json` with `npm run dev` running server + web concurrently,
-  plus `npm test` and `npm run typecheck`
-- Vite proxy `/api` → `http://localhost:3000`
-- Boot exits with a clear message naming `.env.example` if the key is missing,
-  and mentioning `USE_FAKE_VISION=true` as the key-free alternative
-- README setup section covering both paths: with a key, and `USE_FAKE_VISION=true`
-
-## Working method
-After EACH phase: run `npx tsc --noEmit && npx vitest run`, fix what breaks,
-give me a 3-line summary, then STOP for review. I commit each phase myself once
-I've reviewed it — do not run git commands.
-
-Phase 1 — .gitignore, .env.example, scaffold, config, schema, db/index,
-repository, and the two repository tests (round-trip, markFailed)
-
-Phase 2 — errors, error-handler, vision (types, fake, anthropic, factory)
-
-Phase 3 — routes, app.ts, index.ts, and the three route tests
-(no file → 400, text/plain → 415, valid PNG → 201 then ready)
-
-Phase 4 — frontend
-
-Phase 5 — README, then trim this file: delete the Working method section and
-the phase list, leaving only the project constraints
-
-Keep a running list of every place you chose between two reasonable approaches —
-I want those for the tradeoffs section.
- 
