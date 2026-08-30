@@ -6,6 +6,9 @@ Upload an image, get a 2-3 sentence AI-generated description of it.
 
 ## Setup
 
+**Requires Node 20.6+** (the dev script uses Node's native `--env-file` flag).
+Developed and tested on Node 21.6.1.
+
 ```bash
 npm install
 cp .env.example .env
