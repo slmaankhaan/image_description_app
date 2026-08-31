@@ -49,25 +49,26 @@ the `failed` path with an invalid key — not only against the fake client.
 
 ```mermaid
 sequenceDiagram
-    participant Browser
-    participant API
-    participant Disk
-    participant DB
-    participant Vision
+  participant Browser
+  participant API
+  participant Disk
+  participant DB
+  participant Vision
 
-    Browser->>API: POST /api/images (multipart)
-    API->>Disk: stream file, check size + magic bytes
-    API->>DB: insert row (status=pending)
-    API-->>Browser: 201 Created
+  Browser->>API: POST /api/images (multipart)
+  API->>Disk: stream file, check size + magic bytes
+  API->>DB: insert row (status=pending)
+  API-->>Browser: 201 Created
 
-    Note over API,Vision: description runs after the response
+  Note over API,Vision: description runs after the response
 
-    API->>Vision: describe(base64)
-    Vision-->>API: description
-    API->>DB: markReady (or markFailed on error)
+  API->>Disk: read file, base64-encode
+  API->>Vision: describe(base64)
+  Vision-->>API: description
+  API->>DB: markReady (or markFailed on error)
 
-    Browser->>API: GET /api/images (poll, 2s)
-    API-->>Browser: status=ready + description
+  Browser->>API: GET /api/images (poll, 2s)
+  API-->>Browser: status=ready + description
 ```
 
 ## Key decisions
@@ -86,8 +87,8 @@ from the interface signature.
 
 **`Config` is a discriminated union, not an optional field.**
 `{ useFakeVision: true }` vs `{ useFakeVision: false; anthropicApiKey: string }`
-means the vision factory narrows on `useFakeVision`, so there is no non-null
-assertion anywhere in the codebase.
+means the vision factory narrows on useFakeVision, so the API key is only reachable 
+where it's guaranteed to exist — no non-null assertion, no runtime re-check.
 
 ## Tradeoffs
 
